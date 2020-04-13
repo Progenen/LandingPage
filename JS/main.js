@@ -92,4 +92,20 @@ window.addEventListener('DOMContentLoaded', function() {
         more.classList.remove('more-splash');
     });
 
+
+    let message = {
+       loading: 'Загрузка...',
+       sucess: "Спасибо! Мы скоро с вами свяжемся",
+       failure: 'error'
+    };
+
+    let form = document.querySelector('form'),
+        input = form.querySelector('input'),
+        statusMessage = document.createElement('div');
+
+    statusMessage.classList.add('status');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+    });
 });
