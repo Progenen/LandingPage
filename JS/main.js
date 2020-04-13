@@ -99,22 +99,46 @@ window.addEventListener('DOMContentLoaded', function() {
        failure: 'error'
     };
 
-    let form = document.querySelector('form'),
-        input = form.querySelector('input'),
+    let form = document.querySelector('.main-form'),
+        input = form.querySelectorAll('input'),
         statusMessage = document.createElement('div');
 
     statusMessage.classList.add('status');
 
     form.addEventListener('submit', function(event) {
         event.preventDefault();
+        form.appendChild(statusMessage);
 
         let request = new XMLHttpRequest();
 
         JSON.stringify(request);
         request.open('POST', 'server.php');
-        request.setRequestHeader('Content-type', 'application/x-www-form-urlencode');
+        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); -- отправка кода на сервер 
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
         let formData = new FormData(form);
-        request.send();
+
+        let obj = {};
+        formData.forEach(function (key, value){
+            obj[key] = value;
+        });
+
+        let json = JSON.stringify(obj);
+
+        request.send(json);
+
+    request.addEventListener('readystatechange', function() {
+        if(request.readyState < 4){
+            statusMessage.innerHTML = message.loading;
+        } else if(request.readyState === 4 && request.status == 200) {
+            statusMessage.innerHTML = message.sucess;
+        } else {
+            statusMessage.innerHTML = message.failure;
+        }
+
+        for(let i = 0; i < input.length; i++) {
+            input[i].value = '';
+        }
+    });
     });
 });
