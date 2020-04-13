@@ -107,5 +107,14 @@ window.addEventListener('DOMContentLoaded', function() {
 
     form.addEventListener('submit', function(event) {
         event.preventDefault();
+
+        let request = new XMLHttpRequest();
+
+        JSON.stringify(request);
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/x-www-form-urlencode');
+
+        let formData = new FormData(form);
+        request.send();
     });
 });
