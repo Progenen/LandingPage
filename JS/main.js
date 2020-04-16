@@ -108,12 +108,12 @@ window.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         form.appendChild(statusMessage);
-
+    
+    return new Promise(function(resolve, reject){
         let request = new XMLHttpRequest();
 
-        JSON.stringify(request);
         request.open('POST', 'server.php');
-        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); -- отправка кода на сервер 
+        request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
         let formData = new FormData(form);
@@ -123,22 +123,28 @@ window.addEventListener('DOMContentLoaded', function() {
             obj[key] = value;
         });
 
-        let json = JSON.stringify(obj);
-
-        request.send(json);
+        request.send(formData);
 
     request.addEventListener('readystatechange', function() {
         if(request.readyState < 4){
-            statusMessage.innerHTML = message.loading;
-        } else if(request.readyState === 4 && request.status == 200) {
-            statusMessage.innerHTML = message.sucess;
+            resolve();
+        } else if(request.readyState === 4) {
+            if(request.status < 300 && request.status == 200) {
+                resolve();
+            }
         } else {
-            statusMessage.innerHTML = message.failure;
+            reject();
         }
+    }
+}
+    request.send(formData);
+});
+}
 
         for(let i = 0; i < input.length; i++) {
             input[i].value = '';
         }
+    });
     });
     });
 });
